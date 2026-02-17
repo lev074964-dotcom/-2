@@ -1,5 +1,10 @@
-# -2
 #простой бот
+
+
+
+
+
+
 import telebot
 import time
 import random
