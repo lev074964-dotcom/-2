@@ -35,5 +35,10 @@ def send_mem(messasge):
     img_name = random.choise(images)
     with open('images/mem1.jpg', 'rb') as f:  
         bot.send_photo(message.chat.id, f)          
+
+@bot.message_handler(commands=['шутка'])
+def send_шутки(messasge):
+    bot.reply_to(message, " Шутка№1 Штирлецу звонят по телефону и говорят вам наверно не спится без меня а он отвечает я смогу спица и без вас.   Шутка№2 Штирлецу стучат в дверь 40 раз он думает сороконожка 5 осминогов за дверью думают дурак")
+    
     
     bot.polling()
