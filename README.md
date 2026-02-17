@@ -3,7 +3,7 @@
 import telebot
 import time
 import random
-    bot = telebot.TeleBot("8578172660:AAG7_qetUfYvtENJWhLjdG0uVDFnvUYWK90")
+    bot = telebot.TeleBot("Токен")
     
     @bot.message_handler(commands=['start'])
     def send_welcome(message):
