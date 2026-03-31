@@ -1,50 +1,62 @@
-#простой бот
+
+#Импорт
+from flask import Flask, render_template, request
 
 
+app = Flask(__name__)
 
+def result_calculate(size, lights, device):
+    #Переменные для энергозатратности приборов
+    home_coef = 100
+    light_coef = 0.04
+    devices_coef = 5   
+    return size * home_coef + lights * light_coef + device * devices_coef 
 
+#Первая страница
+@app.route('/')
+def index():
+    return render_template('index.html')
+#Вторая страница
+@app.route('/<size>')
+def lights(size):
+    return render_template(
+                            'lights.html', 
+                            size=size
+                           )
 
+#Третья страница
+@app.route('/<size>/<lights>')
+def electronics(size, lights):
+    return render_template(
+                            'electronics.html',                           
+                            size = size, 
+                            lights = lights                           
+                           )
 
-import telebot
-import time
-import random
-    bot = telebot.TeleBot("Токен")
-sh = ("Шутка№1 Штирлецу звонят по телефону и говорят вам наверно не спится без меня а он отвечает я смогу спица и без вас., "Шутка№2 Штирлецу стучат в дверь 40 раз он думает сороконожка 5 осминогов за дверью думают дурак")
-    
-    @bot.message_handler(commands=['start'])
-    def send_welcome(message):
-        bot.reply_to(message, "Привет! Я твой Telegram бот. Напиши что-нибудь!")
-    
-    @bot.message_handler(commands=['hello'])
-    def send_hello(message):
-        bot.reply_to(message, "Привет! Как дела?")
-    
-    @bot.message_handler(commands=['bye'])
-    def send_bye(message):
-        bot.reply_to(message, "Пока! Удачи!")
-    
-    
-    @bot.message_handler(func=lambda message: True)
-    def echo_all(message):
-        bot.reply_to(message, message.text)
+#Расчет
+@app.route('/<size>/<lights>/<device>')
+def end(size, lights, device):
+    return render_template('end.html', 
+                            result=result_calculate(int(size),
+                                                    int(lights), 
+                                                    int(device)
+                                                    )
+                        )
+#Форма
+@app.route('/form')
+def form():
+    return render_template('form.html')
 
-    def set_timer(message):
-        args = message.text.split()
-    if len(args) > 1 and args[1].isdigit():
-        sec = int(args[1])
-        schedule.every(sec).seconds.do(beep, message.chat.id).tag(message.chat.id)
-    else:
-        bot.reply_to(message, 'Usage: /set <seconds>')
+#Результаты формы
+@app.route('/submit', methods=['POST'])
+def submit_form():
+    #Создай переменные для сбора информации
+    name = request.form['name']
+    email = request.form['email']
+    address = request.form['address']
+    date = request.form['date']
 
-@bot.message_handler(commands=['mem'])
-def send_mem(messasge):
-    img_name = random.choise(images)
-    with open('images/mem1.jpg', 'rb') as f:  
-        bot.send_photo(message.chat.id, f)          
+    # здесь вы можете сохранить данные или отправить их по электронной почте
+    return render_template('form_result.html', name=name, email=email, address=address, date=date )
 
-@bot.message_handler(commands=['шутка'])
-def send_шутки(messasge):
-    bot.reply_to(message, random.choise(sh))
-    
-    
-    bot.polling()
+app.run(debug=True)
